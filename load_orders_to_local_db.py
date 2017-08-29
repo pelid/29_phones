@@ -8,6 +8,7 @@ import datetime
 import os
 import pytz
 
+
 def create_session_and_model(db_url_path):
     engine = create_engine(db_url_path)
     Session = sessionmaker(bind=engine)
@@ -57,7 +58,6 @@ if __name__ == "__main__":
     table_names_list = LocalOrderModel.__table__.__dict__['columns'].keys()
     orders_counter = 0
     five_minutes = 60*5
-    '''
     while True:
         if len(local_session.query(LocalOrderModel).all()) != 0:
             lastest_confirmed_order_date = local_session.query(LocalOrderModel).order_by(
@@ -68,6 +68,4 @@ if __name__ == "__main__":
         if new_orders:
             orders_counter += len(new_orders)
             print('записей вставлено: {}'.format(orders_counter), end='\r')
-        print('kek')
-        time.sleep(5)
-    '''
+        time.sleep(five_minutes)
