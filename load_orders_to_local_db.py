@@ -61,11 +61,11 @@ if __name__ == "__main__":
     while True:
         if len(local_session.query(LocalOrderModel).all()) != 0:
             lastest_confirmed_order_date = local_session.query(LocalOrderModel).order_by(
-                                                                    LocalOrderModel.confirmed.desc()).first().confirmed
+                                              LocalOrderModel.confirmed.desc()).first().confirmed
         new_orders = get_new_order_list_from_remote_db(remote_session, RemoteOrderModel,
-                                                                                            lastest_confirmed_order_date)
+                                                       lastest_confirmed_order_date)
         insert_new_orders_to_db(local_session, LocalOrderModel, new_orders, table_names_list)
         if new_orders:
             orders_counter += len(new_orders)
-            print('записей вставлено: {}'.format(orders_counter), end='\r')
+            print('Rows inserted: {}'.format(orders_counter), end='\r')
         time.sleep(five_minutes)
