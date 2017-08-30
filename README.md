@@ -13,7 +13,7 @@ Microservice listens remote database for new rows which are orders for call cent
 ```sh
 $ pip install -r requirements
 ```
-## 2. Restore backup with pgAdmin4 (file for backup is `backup.sql`)
+## 2. Create backup from remote db and restore it on local with pgAdmin4
 ## 3. Create environment variable for database url
 ```sh
 $ export DATABASE_URL=your_url
