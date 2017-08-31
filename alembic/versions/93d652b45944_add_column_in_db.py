@@ -14,10 +14,10 @@ revision = '93d652b45944'
 down_revision = None
 branch_labels = None
 depends_on = None
-
+string_len = 10
 
 def upgrade():
-    op.add_column('orders', sa.Column('normalized_phone_number', sa.String(10)))
+    op.add_column('orders', sa.Column('normalized_phone_number', sa.String(string_len)))
 
 
 def downgrade():
