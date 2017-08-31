@@ -9,8 +9,7 @@ import re
 
 def create_session_and_model(db_url_path):
     engine = create_engine(db_url_path)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    session = sessionmaker(bind=engine)()
     base_class = declarative_base()
     base_class.metadata.reflect(engine)
 
