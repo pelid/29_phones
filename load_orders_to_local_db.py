@@ -41,7 +41,7 @@ def normalize_orders_in_db(session, order_class, not_normalized_orders):
 
 def print_new_orders_amount(not_normalized_orders):
     if not_normalized_orders:
-        print('Rows inserted: {}\n'.format(len(not_normalized_orders)))
+        print('Rows normalized: {}\n'.format(len(not_normalized_orders)))
 
 
 if __name__ == "__main__":
