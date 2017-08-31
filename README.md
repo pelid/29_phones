@@ -2,11 +2,9 @@
 
 # What is it
 
-Microservice listens remote database for new rows which are orders for call center. It writes rows into local database and adds new column for standartized phone number. Library for standartizing numbers is phonenumbers by google.
+Microservice listens remote database for new rows which are orders for call center. It writes rows into local database and adds new column for standartized phone number.
 # What in use
 - sqlaclchemy
-- pytz
-- phonenumbers
 - alembic
 # How to
 ## 1. Install requirements
