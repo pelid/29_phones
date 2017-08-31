@@ -20,7 +20,7 @@ def create_session_and_model(db_url_path):
     return session, order_class
 
 
-def get_not_normalized_orders_list_from_db(session, order_class):
+def get_not_normalized_orders_from_db(session, order_class):
     not_normalized_orders = []
     try:
         not_normalized_orders = session.query(order_class).filter(
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     session, order_class = create_session_and_model(db_url)
     time_amount = 60*5
     while True:
-        not_normalized_orders = get_not_normalized_orders_list_from_db(session, order_class)
+        not_normalized_orders = get_not_normalized_orders_from_db(session, order_class)
         normalize_orders_in_db(session, order_class, not_normalized_orders)
         print_new_orders_amount(not_normalized_orders)
         time.sleep(time_amount)
