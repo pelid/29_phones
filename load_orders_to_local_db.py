@@ -1,10 +1,21 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.exc import TimeoutError
+from sqlalchemy.exc import TimeoutError, DBAPIError, DisconnectionError
 import time
 import os
 import re
+import logging
+import argparse
+
+
+VERBOSITY_TO_LOGGING_LEVELS = {
+    0: logging.WARNING,
+    1: logging.INFO,
+    2: logging.DEBUG,
+}
+
+DB_URL = os.environ["DATABASE_URL"]
 
 
 def create_session_and_model(db_url_path):
@@ -25,7 +36,16 @@ def get_not_normalized_orders_from_db(session, order_class):
         not_normalized_orders = session.query(order_class).filter(
                                     order_class.normalized_phone_number == None).all()
     except TimeoutError as e:
-        print(e, '\nTrying reconnect to db')
+        logging.debug(e)
+        logging.info('Something goes wrong. Trying reconnect to db')
+        db.session.rollback()
+    except DBAPIError as e:
+        logging.debug(e)
+        logging.info('Something goes wrong. Trying reconnect to db')
+        db.session.rollback()
+    except DisconnectionError as e:
+        logging.debug(e)
+        logging.info('Something goes wrong. Trying reconnect to db')
         db.session.rollback()
     return not_normalized_orders
 
@@ -41,12 +61,21 @@ def normalize_orders_in_db(session, order_class, not_normalized_orders):
 
 def print_new_orders_amount(not_normalized_orders):
     if not_normalized_orders:
-        print('Rows normalized: {}\n'.format(len(not_normalized_orders)))
+        logging.info('Rows normalized: {}\n'.format(len(not_normalized_orders)))
+
+
+def get_args_from_terminal():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--verbose', '-v', action='count', default=0)
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == "__main__":
-    db_url = os.environ["DATABASE_URL"]
-    session, order_class = create_session_and_model(db_url)
+    args = get_args_from_terminal()
+    logging_level = VERBOSITY_TO_LOGGING_LEVELS[args.verbose]
+    logging.basicConfig(level=logging_level)
+    session, order_class = create_session_and_model(DB_URL)
     time_amount = 60*5
     while True:
         not_normalized_orders = get_not_normalized_orders_from_db(session, order_class)
