@@ -35,15 +35,7 @@ def get_not_normalized_orders_from_db(session, order_class):
     try:
         not_normalized_orders = session.query(order_class).filter(
                                     order_class.normalized_phone_number == None).all()
-    except TimeoutError as e:
-        logging.debug(e)
-        logging.info('Something goes wrong. Trying reconnect to db')
-        db.session.rollback()
-    except DBAPIError as e:
-        logging.debug(e)
-        logging.info('Something goes wrong. Trying reconnect to db')
-        db.session.rollback()
-    except DisconnectionError as e:
+    except (TimeoutError, DBAPIError, DisconnectionError) as e:
         logging.debug(e)
         logging.info('Something goes wrong. Trying reconnect to db')
         db.session.rollback()
